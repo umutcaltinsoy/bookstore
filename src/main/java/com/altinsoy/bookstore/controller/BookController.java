@@ -1,19 +1,17 @@
 package com.altinsoy.bookstore.controller;
 
 import com.altinsoy.bookstore.dto.BookDto;
-import com.altinsoy.bookstore.dto.CustomerDto;
 import com.altinsoy.bookstore.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class BookController {
     private final BookService bookService;
 

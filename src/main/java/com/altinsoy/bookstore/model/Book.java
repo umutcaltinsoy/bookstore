@@ -1,8 +1,10 @@
 package com.altinsoy.bookstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,4 +31,11 @@ public class Book {
     @Column(name = "stock")
     private Integer unitsInStock;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JsonIgnore
+    private List<Order> order;
 }
