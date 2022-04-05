@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @Transactional
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class CustomerController {
 
     private final CustomerService customerService;
