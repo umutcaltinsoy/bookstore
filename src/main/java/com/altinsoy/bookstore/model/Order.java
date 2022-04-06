@@ -35,11 +35,11 @@ public class Order {
             name = "order_books",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Book> books;
-    // cok basit o, bean olursturuyon sadece
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Customer customer;
 }

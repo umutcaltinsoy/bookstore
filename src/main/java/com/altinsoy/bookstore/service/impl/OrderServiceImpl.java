@@ -1,7 +1,7 @@
 package com.altinsoy.bookstore.service.impl;
 
 import com.altinsoy.bookstore.dto.BookOrderDto;
-import com.altinsoy.bookstore.dto.Delete;
+import com.altinsoy.bookstore.dto.DeleteOrderDto;
 import com.altinsoy.bookstore.dto.OrderListDto;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
 import com.altinsoy.bookstore.exceptions.CustomerNotFoundException;
@@ -64,10 +64,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Delete delete) {
+    public void deleteOrder(DeleteOrderDto deleteOrderDto) {
         log.info("Deleting order...");
-        getIncreaseStock(delete.getBookOrderDto());
-        orderRepository.deleteOrderById(delete.getId());
+        getIncreaseStock(deleteOrderDto.getBookOrderDto());
+        orderRepository.deleteOrderById(deleteOrderDto.getId());
     }
 
 

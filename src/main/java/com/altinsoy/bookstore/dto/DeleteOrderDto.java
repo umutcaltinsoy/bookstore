@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Delete {
+public class DeleteOrderDto {
     private List<BookOrderDto> bookOrderDto;
     private Long id;
 }

@@ -1,6 +1,6 @@
 package com.altinsoy.bookstore.controller;
 
-import com.altinsoy.bookstore.dto.Delete;
+import com.altinsoy.bookstore.dto.DeleteOrderDto;
 import com.altinsoy.bookstore.dto.OrderListDto;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
 import com.altinsoy.bookstore.model.Order;
@@ -28,9 +28,9 @@ public class OrderController {
     }
 
     @DeleteMapping("/deleteOrder")
-    public void deleteOrder(@RequestBody Delete delete) {
+    public void deleteOrder(@RequestBody DeleteOrderDto deleteOrderDto) {
         log.info("Delete order...");
-        orderService.deleteOrder(delete);
+        orderService.deleteOrder(deleteOrderDto);
     }
 
     @GetMapping("/listOfOrders")

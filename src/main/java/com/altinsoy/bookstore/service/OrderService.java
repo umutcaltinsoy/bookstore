@@ -1,7 +1,7 @@
 package com.altinsoy.bookstore.service;
 
 
-import com.altinsoy.bookstore.dto.Delete;
+import com.altinsoy.bookstore.dto.DeleteOrderDto;
 import com.altinsoy.bookstore.dto.OrderListDto;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
 import com.altinsoy.bookstore.model.Order;
@@ -13,7 +13,7 @@ public interface OrderService {
 
     List<OrderListDto> listOrdersOfCustomers(Long id);
 
-    void deleteOrder(Delete delete);
+    void deleteOrder(DeleteOrderDto deleteOrderDto);
 
     Order findOrderById(Long id);
 
