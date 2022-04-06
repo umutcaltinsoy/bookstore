@@ -1,5 +1,6 @@
 package com.altinsoy.bookstore.controller;
 
+import com.altinsoy.bookstore.dto.Delete;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
 import com.altinsoy.bookstore.model.Order;
 import com.altinsoy.bookstore.service.OrderService;
@@ -22,10 +23,14 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    @DeleteMapping("/deleteOrder")
+    public void deleteOrder(@RequestBody Delete delete) {
+        orderService.deleteOrder(delete);
+    }
+
     @GetMapping("/listOfOrders")
     public ResponseEntity<List<Order>> listOrdersOfCustomers(@RequestParam Long id) {
         List<Order> orders = orderService.listOrdersOfCustomers(id);
         return ResponseEntity.ok(orders);
     }
-
 }

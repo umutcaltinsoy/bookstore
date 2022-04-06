@@ -1,7 +1,9 @@
 package com.altinsoy.bookstore.service.impl;
 
 import com.altinsoy.bookstore.dto.BookOrderDto;
+import com.altinsoy.bookstore.dto.Delete;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
+import com.altinsoy.bookstore.exceptions.CustomerNotFoundException;
 import com.altinsoy.bookstore.model.Book;
 import com.altinsoy.bookstore.model.Customer;
 import com.altinsoy.bookstore.model.Order;
@@ -16,6 +18,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,37 +34,64 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order addOrder(OrderRequestDto orderRequestDto) {
 
-        Customer customer = customerRepository.findById(orderRequestDto.getCustomerId()).get();
         List<Book> bookList = new ArrayList<>();
         List<Long> bookIds = orderRequestDto.getBookOrderDto().stream()
                 .map(BookOrderDto::getBookId).collect(Collectors.toList());
 
         for (Long id : bookIds) {
-            Book book = bookRepository.findById(id).get();
-            bookList.add(book);
+            Optional<Book> book = bookRepository.findById(id);
+            book.ifPresent(bookList::add);
         }
 
-        Order order = Order.builder()
+        Optional<Customer> customer = customerRepository.findById(orderRequestDto.getCustomerId());
+        if (customer.isEmpty()) {
+            throw new CustomerNotFoundException("Customer not exist with given ID");
+        }
+        Order order = createOrder(customer.get(), bookList);
+        updateStock(orderRequestDto.getBookOrderDto());
+        return orderRepository.save(order);
+    }
+
+    private Order createOrder(Customer customer, List<Book> bookList) {
+        return Order.builder()
                 .id(0L)
                 .books(bookList)
                 .customer(customer)
                 .createdDate(new Date())
                 .build();
-        updateStock(orderRequestDto.getBookOrderDto());
-        return orderRepository.save(order);
     }
 
     @Override
     public List<Order> listOrdersOfCustomers(Long id) {
-        return orderRepository.findByCustomer_Id(id);
+        return orderRepository.findOrderByCustomerId(id);
+    }
+
+    @Override
+    public void deleteOrder(Delete delete) {
+        getIncreaseStock(delete.getBookOrderDto());
+        orderRepository.deleteOrderById(delete.getId());
+    }
+
+    private void getIncreaseStock(List<BookOrderDto> bookOrderDtos) {
+        for (BookOrderDto item : bookOrderDtos) {
+            Optional<Book> book = bookRepository.findById(item.getBookId());
+            Book book1 = book.get();
+            book1.setUnitsInStock(book1.getUnitsInStock() + item.getQuantity());
+            bookRepository.save(book1);
+        }
+
     }
 
 
     private void updateStock(List<BookOrderDto> bookOrderDto) {
         for (BookOrderDto item : bookOrderDto) {
-            Book book = bookRepository.findById(item.getBookId()).get();
-            book.setUnitsInStock(book.getUnitsInStock() - item.getCount());
-            bookRepository.save(book);
+            Optional<Book> book = bookRepository.findById(item.getBookId());
+
+            if (book.isPresent()) {
+                Book book1 = book.get();
+                book1.setUnitsInStock(book1.getUnitsInStock() - item.getQuantity());
+                bookRepository.save(book1);
+            }
         }
     }
 }
