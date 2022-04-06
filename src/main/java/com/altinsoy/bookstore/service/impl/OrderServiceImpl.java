@@ -2,6 +2,7 @@ package com.altinsoy.bookstore.service.impl;
 
 import com.altinsoy.bookstore.dto.BookOrderDto;
 import com.altinsoy.bookstore.dto.Delete;
+import com.altinsoy.bookstore.dto.OrderListDto;
 import com.altinsoy.bookstore.dto.OrderRequestDto;
 import com.altinsoy.bookstore.exceptions.CustomerNotFoundException;
 import com.altinsoy.bookstore.model.Book;
@@ -12,6 +13,7 @@ import com.altinsoy.bookstore.repository.CustomerRepository;
 import com.altinsoy.bookstore.repository.OrderRepository;
 import com.altinsoy.bookstore.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final BookRepository bookRepository;
-
+    private final ModelMapper modelMapper;
 
     @Override
     public Order addOrder(OrderRequestDto orderRequestDto) {
@@ -47,29 +49,30 @@ public class OrderServiceImpl implements OrderService {
         if (customer.isEmpty()) {
             throw new CustomerNotFoundException("Customer not exist with given ID");
         }
-        Order order = createOrder(customer.get(), bookList);
+        Order order = createOrder(customer.get(), bookList, orderRequestDto.getBookOrderDto());
         updateStock(orderRequestDto.getBookOrderDto());
         return orderRepository.save(order);
     }
 
-    private Order createOrder(Customer customer, List<Book> bookList) {
-        return Order.builder()
-                .id(0L)
-                .books(bookList)
-                .customer(customer)
-                .createdDate(new Date())
-                .build();
-    }
-
     @Override
-    public List<Order> listOrdersOfCustomers(Long id) {
-        return orderRepository.findOrderByCustomerId(id);
+    public List<OrderListDto> listOrdersOfCustomers(Long id) {
+        return orderRepository.findOrderByCustomerId(id).stream().map(order -> modelMapper.map(order, OrderListDto.class)).collect(Collectors.toList());
     }
 
     @Override
     public void deleteOrder(Delete delete) {
         getIncreaseStock(delete.getBookOrderDto());
         orderRepository.deleteOrderById(delete.getId());
+    }
+
+
+    private Order createOrder(Customer customer, List<Book> bookList, List<BookOrderDto> bookOrderDtoList) {
+        return Order.builder()
+                .id(0L)
+                .books(bookList)
+                .customer(customer)
+                .createdDate(new Date())
+                .build();
     }
 
     private void getIncreaseStock(List<BookOrderDto> bookOrderDtos) {
@@ -92,6 +95,7 @@ public class OrderServiceImpl implements OrderService {
                 book1.setUnitsInStock(book1.getUnitsInStock() - item.getQuantity());
                 bookRepository.save(book1);
             }
+
         }
     }
 }
