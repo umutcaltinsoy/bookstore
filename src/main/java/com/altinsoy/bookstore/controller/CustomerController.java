@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,9 +25,9 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<Boolean> saveCustomer(@RequestBody CustomerDto customerDto) {
-        Boolean isSaved = customerService.saveCustomer(customerDto);
-        return ResponseEntity.ok(isSaved);
+    public ResponseEntity<CustomerDto> saveCustomer(@Valid @RequestBody CustomerDto customerDto) {
+        CustomerDto saveCustomer = customerService.saveCustomer(customerDto);
+        return ResponseEntity.ok(saveCustomer);
     }
 
     @PutMapping("/customer/{identityNumber}")

@@ -7,7 +7,7 @@ import java.util.List;
 public interface CustomerService {
     List<CustomerDto> getCustomers();
 
-    Boolean saveCustomer(CustomerDto customerDto);
+    CustomerDto saveCustomer(CustomerDto customerDto);
 
     CustomerDto updateCustomer(String identityNumber, CustomerDto customerDto);
 

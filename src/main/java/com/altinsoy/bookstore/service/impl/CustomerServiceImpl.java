@@ -28,16 +28,15 @@ public class CustomerServiceImpl implements CustomerService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
-    public Boolean saveCustomer(CustomerDto customerDto) {
-        Boolean isSaved = false;
+    public CustomerDto saveCustomer(CustomerDto customerDto) {
         Customer customer = customerMapper.mapCustomerDtoToCustomer(customerDto);
-        Optional<Customer> isCustomerExist = customerRepository.findByIdentityNumber(customerDto.getIdentityNumber());
-        if (isCustomerExist.isEmpty()) {
+        Optional<Customer> customer1 = customerRepository.findByIdentityNumber(customerDto.getIdentityNumber());
+        if (customer1.isEmpty()) {
             customerRepository.save(customer);
-            isSaved = true;
         }
-        return isSaved;
+        return customerMapper.mapCustomerToCustomerDto(customer);
     }
 
     @Override
@@ -60,6 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return customerDto;
     }
+
 
     @Override
     public void deleteCustomer(String identityNumber) {
