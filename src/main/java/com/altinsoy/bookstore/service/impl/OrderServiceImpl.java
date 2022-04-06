@@ -66,6 +66,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
+    @Override
+    public Order findOrderById(Long id) {
+        return orderRepository.findOrderById(id);
+    }
+
+
     private Order createOrder(Customer customer, List<Book> bookList, List<BookOrderDto> bookOrderDtoList) {
         return Order.builder()
                 .id(0L)
