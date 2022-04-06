@@ -1,7 +1,6 @@
 package com.altinsoy.bookstore.service.impl;
 
 import com.altinsoy.bookstore.dto.BookDto;
-import com.altinsoy.bookstore.dto.CustomerDto;
 import com.altinsoy.bookstore.mapper.BookMapper;
 import com.altinsoy.bookstore.model.Book;
 import com.altinsoy.bookstore.repository.BookRepository;
