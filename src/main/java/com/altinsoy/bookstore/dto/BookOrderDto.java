@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class BookOrderDto {
     private Long bookId;
-    private int count;
+    private int quantity;
 }
