@@ -7,13 +7,17 @@ import com.altinsoy.bookstore.model.Customer;
 import com.altinsoy.bookstore.repository.CustomerRepository;
 import com.altinsoy.bookstore.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
@@ -23,6 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDto> getCustomers() {
         List<Customer> customers = customerRepository.findAll();
+        log.info("List customers...");
         return customers.stream()
                 .map(customerMapper::mapCustomerToCustomerDto)
                 .collect(Collectors.toList());
@@ -36,6 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer1.isEmpty()) {
             customerRepository.save(customer);
         }
+        log.info("Saving customer...");
         return customerMapper.mapCustomerToCustomerDto(customer);
     }
 
@@ -45,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
                 () -> new CustomerNotFoundException("Customer couldn't found with given id " + identityNumber));
         setCustomerDetails(customerDto, customer);
         Customer updatedCustomer = customerRepository.save(customer);
-
+        log.info("Updating customer...");
         return customerMapper.mapCustomerToCustomerDto(updatedCustomer);
     }
 
@@ -57,6 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerDto = customerMapper.mapCustomerToCustomerDto(customer.get());
             return customerDto;
         }
+        log.info("Get customer with identity number...");
         return customerDto;
     }
 

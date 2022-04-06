@@ -13,6 +13,7 @@ import com.altinsoy.bookstore.repository.CustomerRepository;
 import com.altinsoy.bookstore.repository.OrderRepository;
 import com.altinsoy.bookstore.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
@@ -51,16 +53,19 @@ public class OrderServiceImpl implements OrderService {
         }
         Order order = createOrder(customer.get(), bookList, orderRequestDto.getBookOrderDto());
         updateStock(orderRequestDto.getBookOrderDto());
+        log.info("Creating order...");
         return orderRepository.save(order);
     }
 
     @Override
     public List<OrderListDto> listOrdersOfCustomers(Long id) {
+        log.info("Listing orders of customers...");
         return orderRepository.findOrderByCustomerId(id).stream().map(order -> modelMapper.map(order, OrderListDto.class)).collect(Collectors.toList());
     }
 
     @Override
     public void deleteOrder(Delete delete) {
+        log.info("Deleting order...");
         getIncreaseStock(delete.getBookOrderDto());
         orderRepository.deleteOrderById(delete.getId());
     }
@@ -68,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findOrderById(Long id) {
+        log.info("Finding order by id...");
         return orderRepository.findOrderById(id);
     }
 

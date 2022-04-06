@@ -6,6 +6,7 @@ import com.altinsoy.bookstore.model.Book;
 import com.altinsoy.bookstore.repository.BookRepository;
 import com.altinsoy.bookstore.service.BookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
@@ -24,6 +26,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getBooks() {
         List<Book> books = bookRepository.findAll();
+        log.info("Get books...");
         return books.stream()
                 .map(bookMapper::mapBookToBookDto)
                 .collect(Collectors.toList());
@@ -32,11 +35,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public void addBook(BookDto bookDto) {
         Book book = bookMapper.mapBookDtoToBook(bookDto);
+        log.info("Add book...");
         bookRepository.save(book);
     }
 
     @Override
     public void deleteBook(String bookName) {
+        log.info("Delete book...");
         bookRepository.deleteByBookName(bookName);
     }
 
@@ -48,6 +53,7 @@ public class BookServiceImpl implements BookService {
             bookDto = bookMapper.mapBookToBookDto(book.get());
             return bookDto;
         }
+        log.info("Find book...");
         return bookDto;
     }
 }
