@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer1.isEmpty()) {
             customerRepository.save(customer);
         }
-        log.info("Saving customer...");
+        log.info("Saving customer..." + customer);
         return customerMapper.mapCustomerToCustomerDto(customer);
     }
 
@@ -51,7 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
                 () -> new CustomerNotFoundException("Customer couldn't found with given id " + identityNumber));
         setCustomerDetails(customerDto, customer);
         Customer updatedCustomer = customerRepository.save(customer);
-        log.info("Updating customer...");
+        log.info("Updating customer : " + customerDto);
         return customerMapper.mapCustomerToCustomerDto(updatedCustomer);
     }
 
@@ -63,13 +63,14 @@ public class CustomerServiceImpl implements CustomerService {
             customerDto = customerMapper.mapCustomerToCustomerDto(customer.get());
             return customerDto;
         }
-        log.info("Get customer with identity number...");
+        log.info("Get customer with identity number : " + customerDto.getIdentityNumber());
         return customerDto;
     }
 
 
     @Override
     public void deleteCustomer(String identityNumber) {
+        log.info("Deleting customer with ID: " + identityNumber);
         customerRepository.deleteByIdentityNumber(identityNumber);
     }
 
