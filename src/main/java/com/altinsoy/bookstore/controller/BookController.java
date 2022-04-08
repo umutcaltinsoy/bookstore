@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,10 +25,10 @@ public class BookController {
     }
 
     @PostMapping("/book")
-    public ResponseEntity<?> addBook(@RequestBody BookDto bookDto) {
+    public ResponseEntity<BookDto> addBook(@Valid @RequestBody BookDto bookDto) {
         log.info("Adding book...");
-        bookService.addBook(bookDto);
-        return ResponseEntity.ok(HttpStatus.OK);
+        BookDto bookDto1 = bookService.addBook(bookDto);
+        return ResponseEntity.ok(bookDto1);
     }
 
     @DeleteMapping("/book/{bookName}")

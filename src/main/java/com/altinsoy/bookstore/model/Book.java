@@ -33,11 +33,8 @@ public class Book {
     @Column(name = "stock")
     private Integer unitsInStock;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToMany(mappedBy="books", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Order> order;
 }

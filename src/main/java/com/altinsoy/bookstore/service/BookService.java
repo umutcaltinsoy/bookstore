@@ -7,7 +7,7 @@ import java.util.List;
 public interface BookService {
     List<BookDto> getBooks();
 
-    void addBook(BookDto bookDto);
+    BookDto addBook(BookDto bookDto);
 
     void deleteBook(String bookName);
 

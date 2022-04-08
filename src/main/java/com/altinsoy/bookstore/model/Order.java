@@ -26,11 +26,7 @@ public class Order {
     @Column(name = "created_date")
     private Date createdDate;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToMany
     @JoinTable(
             name = "order_books",
             joinColumns = @JoinColumn(name = "order_id"),

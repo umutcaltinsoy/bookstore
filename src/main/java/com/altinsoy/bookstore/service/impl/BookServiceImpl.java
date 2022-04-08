@@ -33,15 +33,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBook(BookDto bookDto) {
-        Book book = bookMapper.mapBookDtoToBook(bookDto);
-        log.info("Add book...");
+    public BookDto addBook(BookDto bookDto) {
+        Book book = Book.builder().author(bookDto.getAuthor())
+                .price(bookDto.getPrice()).bookName(bookDto.getBookName())
+                .unitsInStock(bookDto.getUnitsInStock()).build();
+        log.info("Add book..." + book);
         bookRepository.save(book);
+        return bookMapper.mapBookToBookDto(book);
     }
 
     @Override
     public void deleteBook(String bookName) {
-        log.info("Delete book...");
+        log.info("Delete book : " + bookName);
         bookRepository.deleteByBookName(bookName);
     }
 
@@ -53,7 +56,7 @@ public class BookServiceImpl implements BookService {
             bookDto = bookMapper.mapBookToBookDto(book.get());
             return bookDto;
         }
-        log.info("Find book...");
+        log.info("Find book : " + bookName);
         return bookDto;
     }
 }

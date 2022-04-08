@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -19,9 +21,11 @@ public class BookDto {
     @NotEmpty
     @Size(min = 3, message = "Author is mandatory")
     private String author;
-    @NotEmpty
+    @NotNull
+    @Min(1)
     private Double price;
-    @NotEmpty
+    @NotNull
+    @Min(1)
     private Integer unitsInStock;
 
 }
